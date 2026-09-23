@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room 2 - Advanced CLI</title>
+    <link rel="stylesheet" href="terminal2.css">
+    <style>
+        /* Music Floating Control Button for Terminal Theme */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 224, 102, 0.15);
+            border: 1px solid #ffe066;
+            color: #ffe066;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        .music-btn:hover {
+            background: #ffe066;
+            color: #121318;
+            box-shadow: 0 0 12px #ffe066;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Music Control Button & Audio Player -->
+    <button class="music-btn" id="musicToggle">🎵 Music: OFF</button>
+    <audio id="bgMusic" loop src="music.mp3"></audio>
+
+    <div class="terminal-container">
+        <!-- Terminal Header -->
+        <div class="terminal-header">
+            <div class="buttons">
+                <span class="btn close"></span>
+                <span class="btn minimize"></span>
+                <span class="btn maximize"></span>
+            </div>
+            <div class="title">penny@room2:~</div>
+        </div>
+
+        <!-- Quick Shortcut Bar -->
+        <div class="quick-bar">
+            <button onclick="runCommand('help')">💡 Help</button>
+            <button onclick="runCommand('about')">👤 About</button>
+            <button onclick="runCommand('skills')">⚡ Skills</button>
+            <button onclick="runCommand('social')">🌐 Socials</button>
+            <button onclick="runCommand('clear')">🧹 Clear</button>
+            <button onclick="runCommand('exit')">🚪 Exit</button>
+        </div>
+
+        <!-- Terminal Output Screen -->
+        <div class="terminal-body" id="terminal-body">
+            <p class="system-msg">[ENTERED ROOM 2 - ACCESS GRANTED]</p>
+            <p class="system-msg">Type <span class="highlight">'help'</span> or click the buttons above to interact.</p>
+            <br>
+        </div>
+
+        <!-- Input Line -->
+        <div class="input-line">
+            <span class="prompt">penny@room2:~$</span>
+            <input type="text" id="cli-input" autofocus autocomplete="off">
+        </div>
+    </div>
+
+    <!-- Original Terminal JS Script -->
+    <script src="terminal2.js"></script>
+
+    <!-- Persistent Music Logic Script -->
+    <script>
+        const musicBtn = document.getElementById('musicToggle');
+        const bgMusic = document.getElementById('bgMusic');
+
+        function setUIOn() {
+            musicBtn.textContent = "🎵 Music: ON";
+            musicBtn.style.background = "#ffe066";
+            musicBtn.style.color = "#121318";
+        }
+
+        function setUIOff() {
+            musicBtn.textContent = "🎵 Music: OFF";
+            musicBtn.style.background = "rgba(255, 224, 102, 0.15)";
+            musicBtn.style.color = "#ffe066";
+        }
+
+        // Restore Music Position & State
+        const savedTime = parseFloat(localStorage.getItem('musicTime')) || 0;
+        const isPlaying = localStorage.getItem('musicPlaying') === 'true';
+
+        bgMusic.currentTime = savedTime;
+
+        if (isPlaying) {
+            bgMusic.play().then(() => {
+                setUIOn();
+            }).catch(() => {
+                setUIOff();
+                localStorage.setItem('musicPlaying', 'false');
+            });
+        } else {
+            setUIOff();
+        }
+
+        // Update current music time continuously
+        bgMusic.addEventListener('timeupdate', () => {
+            localStorage.setItem('musicTime', bgMusic.currentTime);
+        });
+
+        // Toggle Music On/Off
+        musicBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    localStorage.setItem('musicPlaying', 'true');
+                    setUIOn();
+                }).catch(() => {
+                    alert("အသံဖိုင် 'music.mp3' ထည့်သွင်းထားရန် လိုအပ်ပါသည်။");
+                });
+            } else {
+                bgMusic.pause();
+                localStorage.setItem('musicPlaying', 'false');
+                setUIOff();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Hanging Lamp</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Lamp & Cord Structure -->
+    <div class="lamp-container">
+        <div class="wire"></div>
+        <div class="lamp-shade">
+            <div class="bulb"></div>
+        </div>
+        <div class="pull-cord" id="pullCord" title="Click to toggle light">
+            <div class="cord-line"></div>
+            <div class="cord-handle"></div>
+        </div>
+    </div>
+
+    <!-- Light Effect -->
+    <div class="light-beam"></div>
+
+    <!-- Secret Code Box -->
+    <div class="content" id="content">
+        <div class="login-box">
+            <label for="nameInput" class="input-label">Just Put Secret Code</label><br>
+            <input type="text" id="nameInput" class="name-input" placeholder="Penny" autocomplete="off">
+            <button id="submitBtn" class="submit-btn">Enter</button>
+            <p id="errorMsg" class="error-msg"></p>
+        </div>
+    </div>
+
+    <!-- Instruction Hint -->
+    <div class="instruction" id="instruction">မီးဖွင့်ရန် ကြိုးကလေးကို ဆွဲလိုက်ပါ 💡</div>
+
+    <script src="design.js"></script>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penny's Virtual Room</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0f111a;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 30%, rgba(255, 224, 102, 0.1), transparent 70%);
+        }
+
+        /* Music Floating Control */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 224, 102, 0.15);
+            border: 1px solid #ffe066;
+            color: #ffe066;
+            padding: 10px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .music-btn:hover {
+            background: #ffe066;
+            color: #121318;
+            box-shadow: 0 0 15px #ffe066;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: #ffe066;
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+            text-shadow: 0 0 10px rgba(255, 224, 102, 0.3);
+        }
+
+        .header p {
+            color: #a0a5b1;
+            font-size: 0.85rem;
+        }
+
+        /* Virtual Room Grid Container */
+        .room-container {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 224, 102, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Room Interactive Items */
+        .room-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .room-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(255, 224, 102, 0.15);
+            border-color: #ffe066;
+            box-shadow: 0 0 15px rgba(255, 224, 102, 0.3);
+        }
+
+        .item-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 8px rgba(255, 224, 102, 0.4));
+        }
+
+        .item-title {
+            font-size: 1rem;
+            color: #ffe066;
+            font-weight: 600;
+        }
+
+        .item-sub {
+            font-size: 0.75rem;
+            color: #8a8f9d;
+        }
+
+        /* Modal / Popup Box */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: #181a24;
+            border: 1px solid #ffe066;
+            border-radius: 20px;
+            padding: 25px 20px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 224, 102, 0.3);
+            transform: scale(0.85);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .modal-title {
+            color: #ffe066;
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-body {
+            color: #d1d5db;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        /* Modal inside Buttons */
+        .yt-btn {
+            display: inline-block;
+            background: #ff0000;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .yt-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
+        }
+
+        .close-btn {
+            background: linear-gradient(135deg, #ffe066, #ffb703);
+            color: #121318;
+            border: none;
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: block;
+            margin: 10px auto 0 auto;
+        }
+
+        /* Back Button */
+        .back-btn {
+            margin-top: 25px;
+            color: #ffe066;
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border: 1px solid rgba(255, 224, 102, 0.3);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 224, 102, 0.2);
+            border-color: #ffe066;
+        }
+
+        /* Mobile Layout Switching */
+        @media (max-width: 480px) {
+            .room-container {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 15px;
+            }
+
+            .room-item {
+                padding: 18px 15px;
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 15px;
+                text-align: left;
+            }
+
+            .item-icon {
+                font-size: 2rem;
+            }
+
+            .header h1 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Music Control Button -->
+    <button class="music-btn" id="musicToggle">🎵 Music: OFF</button>
+    <audio id="bgMusic" loop src="music.mp3"></audio>
+
+    <div class="header">
+        <h1>Welcome to Penny's Room 🚪</h1>
+        <p>Just Click Any Buttons To See</p>
+    </div>
+
+    <!-- Interactive Room Items -->
+    <div class="room-container">
+        <div class="room-item" onclick="openModal('coffee')">
+            <div class="item-icon">☕</div>
+            <div>
+                <div class="item-title">Coffee Corner</div>
+                <div class="item-sub">Daily Thought & Quotes</div>
+            </div>
+        </div>
+
+        <div class="room-item" onclick="openModal('music')">
+            <div class="item-icon">🎧</div>
+            <div>
+                <div class="item-title">Headphones</div>
+                <div class="item-sub">Listen on YouTube</div>
+            </div>
+        </div>
+
+        <div class="room-item" onclick="openModal('books')">
+            <div class="item-icon">📚</div>
+            <div>
+                <div class="item-title">Bookshelf</div>
+                <div class="item-sub">My Favorite Reads</div>
+            </div>
+        </div>
+
+        <div class="room-item" onclick="openModal('calendar')">
+            <div class="item-icon">🗓️</div>
+            <div>
+                <div class="item-title">Calendar</div>
+                <div class="item-sub">Important Dates</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Home Button -->
+    <a href="home.html" class="back-btn">⬅️ Back to Profile</a>
+
+    <!-- Modal Box -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-card">
+            <div class="modal-icon" id="modalIcon">☕</div>
+            <h3 class="modal-title" id="modalTitle">Title</h3>
+            <div class="modal-body" id="modalBody">Body Content</div>
+            <button class="close-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const roomData = {
+            coffee: {
+                icon: "☕",
+                title: "Daily Coffee Quote",
+                body: "“Life is like a cup of coffee. It’s all in how you make it, but most of all, how you take it.”"
+            },
+            music: {
+                icon: "🎧",
+                title: "Penny's Music Playlist",
+                body: `ကျွန်တော် အကြိုက်ဆုံး Music Playlist ကို YouTube မှာ သွားရောက် နားဆင်နိုင်ပါတယ်။<br><br>
+                       <a href="https://youtube.com/watch?v=8A7-54UguKg?si=wFgxkSU37uRST4Wz" target="_blank" class="yt-btn">▶ Morning Vibe</a><br>
+                       <a href="https://youtube.com/watch?v=sxc9ZUfgbHI?si=LzeICtG_DTpVeq8c" target="_blank" class="yt-btn">▶ Midnight Vibe</a><br>
+                       <a href="https://youtube.com/watch?v=lRBSOe3AggM?si=WKn4D3CAaaUbLxgS" target="_blank" class="yt-btn">▶ The Song I Like Most</a>`
+            },
+            books: {
+                icon: "📚",
+                title: "Penny's Bookshelf",
+                body: "<br>• Any Anime Mangas<br>"
+            },
+            calendar: {
+                icon: "🗓️",
+                title: "Special Dates",
+                body: "📌 <b>The dates important</b><br> Birthday is 17th August 2007<br>• Travel Plans : I wanna go to Hpa-An<br>• New Year Goals: I want to be with someone on Newyear"
+            }
+        };
+
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalIcon = document.getElementById('modalIcon');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+
+        function openModal(key) {
+            const data = roomData[key];
+            if (data) {
+                modalIcon.innerHTML = data.icon;
+                modalTitle.innerHTML = data.title;
+                modalBody.innerHTML = data.body;
+                modalOverlay.classList.add('active');
+            }
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+
+        // Music Persistence System
+        const musicBtn = document.getElementById('musicToggle');
+        const bgMusic = document.getElementById('bgMusic');
+
+        function setUIOn() {
+            musicBtn.textContent = "🎵 Music: ON";
+            musicBtn.style.background = "#ffe066";
+            musicBtn.style.color = "#121318";
+        }
+
+        function setUIOff() {
+            musicBtn.textContent = "🎵 Music: OFF";
+            musicBtn.style.background = "rgba(255, 224, 102, 0.15)";
+            musicBtn.style.color = "#ffe066";
+        }
+
+        const savedTime = parseFloat(localStorage.getItem('musicTime')) || 0;
+        const isPlaying = localStorage.getItem('musicPlaying') === 'true';
+
+        bgMusic.currentTime = savedTime;
+
+        if (isPlaying) {
+            bgMusic.play().then(() => {
+                setUIOn();
+            }).catch(() => {
+                setUIOff();
+                localStorage.setItem('musicPlaying', 'false');
+            });
+        } else {
+            setUIOff();
+        }
+
+        bgMusic.addEventListener('timeupdate', () => {
+            localStorage.setItem('musicTime', bgMusic.currentTime);
+        });
+
+        musicBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    localStorage.setItem('musicPlaying', 'true');
+                    setUIOn();
+                }).catch(() => {
+                    alert("အသံဖိုင် 'music.mp3' ထည့်သွင်းထားရန် လိုအပ်ပါသည်။");
+                });
+            } else {
+                bgMusic.pause();
+                localStorage.setItem('musicPlaying', 'false');
+                setUIOff();
+            }
+        });
+    </script>
+</body>
+</html>

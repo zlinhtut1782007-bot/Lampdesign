@@ -1,0 +1,160 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body {
+    background-color: #0d0d11;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px; /* ဖုန်းမှာ နေရာမလွတ်လွန်းအောင် padding လျှော့ထားသည် */
+}
+
+.terminal-container {
+    width: 100%;
+    max-width: 750px;
+    height: 85vh; /* ဖုန်းမှာ height အသေမထားဘဲ screen ရဲ့ ၈၅% ယူရန် */
+    background: rgba(15, 15, 20, 0.95);
+    border: 1px solid rgba(255, 224, 102, 0.35);
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(255, 224, 102, 0.18);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.terminal-header {
+    background: #181820;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.btn {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.close { background: #ff5f56; }
+.minimize { background: #ffbd2e; }
+.maximize { background: #27c93f; }
+
+.title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #888;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+/* Quick Bar - ဖုန်းမှာ အလွယ်တကူ Scroll ဆွဲလို့ရအောင် ပြင်ထားသည် */
+.quick-bar {
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+    background: #121218;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-shrink: 0;
+}
+
+.quick-bar::-webkit-scrollbar {
+    display: none; /* Scrollbar မပေါ်အောင် ဖျောက်ထားသည် */
+}
+
+.quick-bar button {
+    background: rgba(255, 224, 102, 0.1);
+    color: #ffe066;
+    border: 1px solid rgba(255, 224, 102, 0.3);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.quick-bar button:hover {
+    background: #ffe066;
+    color: #000;
+}
+
+.terminal-body {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    color: #4af626;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.system-msg {
+    color: #ffea9f;
+}
+
+.highlight {
+    color: #00e5ff;
+    font-weight: bold;
+}
+
+.input-line {
+    display: flex;
+    padding: 10px 12px;
+    background: #121218;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.prompt {
+    color: #ffe066;
+    margin-right: 8px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+#cli-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-size: 0.85rem;
+    flex: 1;
+    font-family: inherit;
+    width: 100%;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+    
+    .terminal-container {
+        height: 92vh; /* ဖုန်းမှာ Terminal မျက်နှာပြင် အပြည့်နီးပါး ဖြစ်စေရန် */
+        border-radius: 8px;
+    }
+
+    .prompt {
+        font-size: 0.75rem; /* ဖုန်းမှာ Prompt စာတန်း မရှည်လွန်းအောင် */
+    }
+
+    #cli-input {
+        font-size: 0.8rem;
+    }
+}
