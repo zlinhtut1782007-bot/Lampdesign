@@ -3,7 +3,7 @@ const body = document.getElementById('terminal-body');
 
 const commands = {
     'help': 'Available commands: <span class="highlight">about, skills, social/socials, clear, exit</span>',
-    'about': '🚀 Welcome to Room 2! I am Penny, I am the person who learning web development.',
+    'about': '🚀 Welcome to Room 2! I am Penny, I am the person learning web development.',
     'skills': '💻 Frontend: HTML, CSS, JavaScript<br>🛠 Tools: VS Code, Git, Figma',
     'social': '🌐 Facebook: <a href="https://facebook.com/zin.linn.htut.281300" target="_blank" style="color: #ffe066;">/zin.linn.htut.281300</a><br>📱 Telegram: <a href="https://t.me/Penny_quii" target="_blank" style="color: #ffe066;">@Penny_quii</a><br>📞 Viber: 09760444278',
     'socials': '🌐 Facebook: <a href="https://facebook.com/zin.linn.htut.281300" target="_blank" style="color: #ffe066;">/zin.linn.htut.281300</a><br>📱 Telegram: <a href="https://t.me/Penny_quii" target="_blank" style="color: #ffe066;">@Penny_quii</a><br>📞 Viber: 09760444278',
